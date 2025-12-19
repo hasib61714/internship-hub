@@ -364,5 +364,4 @@ This project is created for educational purposes as a university capstone projec
 ⏳ **Phase 5:** Deployment - PENDING  
 
 ---
-
-**Good luck with your presentation! 🚀**
+**Thank You**
