@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
-  withCredentials: true,
+  baseURL: import.meta.env.VITE_API_URL || 'https://internship-hub-backend-production-d83c.up.railway.app/api',
+  withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
