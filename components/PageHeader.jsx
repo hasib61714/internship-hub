@@ -1,0 +1,17 @@
+/**
+ * Consistent page header across all dashboard pages.
+ * @param {string} title
+ * @param {string} description
+ * @param {React.ReactNode} action - optional button/link on the right
+ */
+export default function PageHeader({ title, description, action }) {
+  return (
+    <div className="flex items-start justify-between gap-4">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+        {description && <p className="text-gray-500 mt-1 text-sm">{description}</p>}
+      </div>
+      {action && <div className="flex-shrink-0">{action}</div>}
+    </div>
+  );
+}
