@@ -2,23 +2,29 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, MapPin, Calendar, XCircle, AlertCircle } from 'lucide-react';
+import { FileText, MapPin, Calendar, XCircle, AlertCircle, Star, Video, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMyApplications, useWithdrawApplication } from '@/hooks/useApplications';
+import { useStudentInterviews } from '@/hooks/useInterviews';
 import { Card } from '@/components/ui/Card';
 import { ListRowSkeleton } from '@/components/SkeletonCard';
 import PageHeader from '@/components/PageHeader';
-import { STATUS_COLORS, timeAgo } from '@/lib/utils';
+import { STATUS_COLORS, timeAgo, formatDate } from '@/lib/utils';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
+import ReviewModal from '@/components/ReviewModal';
 import toast from 'react-hot-toast';
 
 export default function StudentApplicationsPage() {
   const { user } = useAuth();
   const { data: applications = [], isLoading } = useMyApplications(user?.id);
+  const { data: interviews = [] } = useStudentInterviews(user?.id);
   const withdraw = useWithdrawApplication();
   const [withdrawingId, setWithdrawingId] = useState(null);
+  const [reviewTarget, setReviewTarget] = useState(null);
+
+  const interviewMap = Object.fromEntries(interviews.map(i => [i.application_id, i]));
 
   async function handleWithdraw(app) {
     if (!confirm(`Withdraw application for "${app.jobs?.title}"?`)) return;
@@ -86,6 +92,16 @@ export default function StudentApplicationsPage() {
                         <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[app.status]}`}>
                           {app.status}
                         </span>
+                        {app.status === 'accepted' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setReviewTarget(app)}
+                            className="text-yellow-600 border-yellow-300 hover:bg-yellow-50"
+                          >
+                            <Star className="h-3.5 w-3.5" /> Rate
+                          </Button>
+                        )}
                         {app.status === 'pending' && (
                           <Button
                             size="sm"
@@ -112,6 +128,26 @@ export default function StudentApplicationsPage() {
                         <span><strong>Reason:</strong> {app.rejection_reason}</span>
                       </div>
                     )}
+
+                    {interviewMap[app.id] && interviewMap[app.id].status === 'scheduled' && (
+                      <div className="mt-3 flex items-center justify-between gap-2 text-sm bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-3 rounded-lg">
+                        <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
+                          <Video className="h-4 w-4 shrink-0" />
+                          <div>
+                            <span className="font-medium">Interview Scheduled</span>
+                            <p className="text-xs text-blue-600 dark:text-blue-400">
+                              {new Date(interviewMap[app.id].scheduled_at).toLocaleString('en-BD', { dateStyle: 'medium', timeStyle: 'short' })}
+                            </p>
+                            {interviewMap[app.id].notes && <p className="text-xs text-gray-500 mt-0.5">{interviewMap[app.id].notes}</p>}
+                          </div>
+                        </div>
+                        <a href={interviewMap[app.id].meeting_link} target="_blank" rel="noreferrer">
+                          <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                            <ExternalLink className="h-3.5 w-3.5" /> Join
+                          </Button>
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </Card>
               </motion.div>
@@ -119,6 +155,14 @@ export default function StudentApplicationsPage() {
           })}
         </div>
       )}
+
+      <ReviewModal
+        isOpen={!!reviewTarget}
+        onClose={() => setReviewTarget(null)}
+        application={reviewTarget}
+        revieweeId={reviewTarget?.jobs?.company_profiles?.id ?? reviewTarget?.jobs?.company_id}
+        revieweeName={reviewTarget?.jobs?.company_profiles?.company_name ?? 'Company'}
+      />
     </div>
   );
 }

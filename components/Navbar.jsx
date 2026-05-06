@@ -59,6 +59,9 @@ export default function Navbar() {
             <Link href="/jobs" className={cn('text-sm font-medium px-3 py-1.5 rounded-lg transition-colors', pathname === '/jobs' ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white')}>
               Browse Jobs
             </Link>
+            <Link href="/micro-jobs" className={cn('text-sm font-medium px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1', pathname === '/micro-jobs' ? 'text-yellow-600' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white')}>
+              ⚡ Quick Hire
+            </Link>
 
             <ThemeToggle />
 

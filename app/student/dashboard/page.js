@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Briefcase, FileText, BookmarkCheck, User, ArrowRight, Clock } from 'lucide-react';
+import { Briefcase, FileText, BookmarkCheck, User, ArrowRight, Clock, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMyApplications } from '@/hooks/useApplications';
@@ -11,6 +11,7 @@ import StatCard from '@/components/StatCard';
 import PageHeader from '@/components/PageHeader';
 import { StatCardSkeleton, ListRowSkeleton } from '@/components/SkeletonCard';
 import { STATUS_COLORS, timeAgo } from '@/lib/utils';
+import AIJobMatch from '@/components/AIJobMatch';
 
 export default function StudentDashboard() {
   const { user, profile } = useAuth();
@@ -54,9 +55,9 @@ export default function StudentDashboard() {
       {/* Quick links */}
       <div className="grid sm:grid-cols-3 gap-4">
         {[
-          { href: '/jobs',               icon: Briefcase,     label: 'Browse Jobs',    desc: 'Find new opportunities' },
-          { href: '/student/saved-jobs', icon: BookmarkCheck, label: 'Saved Jobs',     desc: 'Jobs you bookmarked' },
-          { href: '/student/profile',    icon: User,          label: 'Update Profile', desc: 'Keep your info fresh' },
+          { href: '/jobs',                  icon: Briefcase,     label: 'Browse Jobs',    desc: 'Find new opportunities' },
+          { href: '/student/saved-jobs',   icon: BookmarkCheck, label: 'Saved Jobs',     desc: 'Jobs you bookmarked' },
+          { href: '/student/cv-analyzer',  icon: Sparkles,      label: 'AI CV Analyzer', desc: 'Get AI feedback on your CV' },
         ].map(({ href, icon: Icon, label, desc }) => (
           <Link key={href} href={href}>
             <Card className="hover:shadow-md transition-shadow cursor-pointer group p-5">
@@ -67,6 +68,9 @@ export default function StudentDashboard() {
           </Link>
         ))}
       </div>
+
+      {/* AI Job Matches */}
+      <AIJobMatch />
 
       {/* Recent applications */}
       <Card>

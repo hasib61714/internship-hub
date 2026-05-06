@@ -2,12 +2,14 @@
 
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import { ExternalLink, FileText } from 'lucide-react';
+import { ExternalLink, FileText, Video } from 'lucide-react';
 import { useJobApplications, useUpdateApplicationStatus, useRejectApplicationWithReason } from '@/hooks/useApplications';
 import { useJob } from '@/hooks/useJobs';
+import { useAuth } from '@/contexts/AuthContext';
 import { Card } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
+import ScheduleInterviewModal from '@/components/ScheduleInterviewModal';
 import { ListRowSkeleton } from '@/components/SkeletonCard';
 import PageHeader from '@/components/PageHeader';
 import { STATUS_COLORS, formatDate } from '@/lib/utils';
@@ -17,6 +19,7 @@ const STATUSES = ['pending', 'reviewing', 'shortlisted', 'accepted', 'rejected']
 
 export default function JobApplicationsPage() {
   const { id } = useParams();
+  const { profile } = useAuth();
   const { data: job } = useJob(id);
   const { data: applications = [], isLoading } = useJobApplications(id);
   const updateStatus = useUpdateApplicationStatus();
@@ -24,6 +27,7 @@ export default function JobApplicationsPage() {
   const [selectedApp, setSelectedApp] = useState(null);
   const [rejectTarget, setRejectTarget] = useState(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [interviewTarget, setInterviewTarget] = useState(null);
 
   async function handleStatusChange(applicationId, status) {
     if (status === 'rejected') {
@@ -97,6 +101,11 @@ export default function JobApplicationsPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
+                      {(app.status === 'shortlisted' || app.status === 'accepted') && (
+                        <Button size="sm" variant="outline" onClick={() => setInterviewTarget(app)} className="text-blue-600 border-blue-200 hover:bg-blue-50">
+                          <Video className="h-3.5 w-3.5" /> Interview
+                        </Button>
+                      )}
                       <select
                         value={app.status}
                         onChange={e => handleStatusChange(app.id, e.target.value)}
@@ -138,6 +147,14 @@ export default function JobApplicationsPage() {
           </div>
         </div>
       </Modal>
+
+      {/* Schedule Interview Modal */}
+      <ScheduleInterviewModal
+        isOpen={!!interviewTarget}
+        onClose={() => setInterviewTarget(null)}
+        application={interviewTarget}
+        companyId={profile?.id}
+      />
 
       {/* Applicant detail modal */}
       {selectedApp && (
