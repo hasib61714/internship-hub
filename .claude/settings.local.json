@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Select-String \"framer|react-hot|tanstack\")",
+      "PowerShell(ls \"c:\\\\My Project\\\\internship-hub\\\\node_modules\" | Where-Object { $_.Name -match \"framer|react-hot|tanstack\" } | Select-Object Name)",
+      "PowerShell(Test-Path \"c:\\\\My Project\\\\internship-hub\\\\middleware.js\"; Test-Path \"c:\\\\My Project\\\\internship-hub\\\\middleware.ts\"; Get-ChildItem \"c:\\\\My Project\\\\internship-hub\" -MaxDepth 1 -Name | Where-Object { $_ -notmatch \"node_modules|\\\\.next|\\\\.git\" })"
+    ]
+  }
+}
