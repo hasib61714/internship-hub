@@ -18,19 +18,20 @@
 
 ## About
 
-**Internship Hub** is a full-stack, role-based internship management platform that bridges the gap between students seeking opportunities and employers hunting for fresh talent. Built with **React** and **Laravel**, it provides dedicated dashboards for each user role under a structured, admin-supervised environment. The platform includes a bilingual interface (Bengali & English) and department-wise filtering for an experience tailored to Bangladeshi academic institutions.
+**Internship Hub** is a full-stack, role-based internship management platform that bridges the gap between students seeking opportunities and companies hunting for fresh talent. Built with **Next.js** and **Supabase**, it provides dedicated dashboards for each user role under a structured, admin-supervised environment. The platform supports real-time notifications, messaging, and dark/light theme toggle.
 
 ---
 
 ## Features
 
-- **Student Portal** — Browse internships, filter by department, and submit applications with a single click
-- **Employer Dashboard** — Post positions, review applicant profiles, and manage the full hiring pipeline
-- **Admin Panel** — Platform oversight: user management, post moderation, and analytics
-- **JWT Authentication** — Stateless, secure token-based authentication across all roles
-- **Role-Based Access Control** — Strict, separate permissions for students, employers, and admins
-- **Bilingual Interface** — Full Bengali and English language support throughout the UI
-- **Department-wise Filtering** — Search internships by academic department, field, or location
+- **Student Portal** — Browse internships, apply with one click, track applications, and save jobs
+- **Company Dashboard** — Post positions, review applicants, manage job listings and templates
+- **Admin Panel** — Platform oversight: user management, post moderation, verifications, and analytics
+- **Supabase Auth** — Secure authentication with email/password and session management
+- **Role-Based Access Control** — Strict, separate permissions for students, companies, and admins
+- **Real-time Notifications** — Live notification bell with unread count
+- **Messaging System** — In-app messaging between students and companies
+- **Dark / Light Theme** — Full theme toggle support throughout the UI
 
 ---
 
@@ -38,17 +39,16 @@
 
 <p align="center">
   <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=react,laravel,mysql,vercel&theme=dark" />
+    <img src="https://skillicons.dev/icons?i=nextjs,react,tailwind,supabase,vercel&theme=dark" />
   </a>
 </p>
 
 | Layer | Technology |
 |---|---|
+| Framework | Next.js 15 (App Router) |
 | Frontend | React, Tailwind CSS |
-| Backend | Laravel (PHP) |
-| Database | MySQL |
-| Auth | JWT (JSON Web Tokens) |
-| API | RESTful API |
+| Backend / DB | Supabase (PostgreSQL) |
+| Auth | Supabase Auth |
 | Deployment | Vercel |
 
 ---
@@ -58,8 +58,7 @@
 ### Prerequisites
 
 - Node.js >= 18 & npm
-- PHP >= 8.1 & Composer
-- MySQL >= 8.0
+- A [Supabase](https://supabase.com) project
 
 ### Installation
 
@@ -68,32 +67,27 @@
 git clone https://github.com/hasib61714/internship-hub.git
 cd internship-hub
 
-# Backend setup
-cd backend
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate --seed
-
-# Frontend setup
-cd ../frontend
+# Install dependencies
 npm install
+
+# Copy environment variables
 cp .env.example .env.local
+```
+
+Add your Supabase credentials to `.env.local`:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ### Usage
 
 ```bash
-# Start the Laravel backend
-cd backend
-php artisan serve
-
-# Start the React frontend
-cd frontend
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
@@ -101,17 +95,17 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ```
 internship-hub/
-├── backend/
-│   ├── app/
-│   │   ├── Http/Controllers/
-│   │   └── Models/
-│   ├── database/migrations/
-│   └── routes/api.php
-└── frontend/
-    └── src/
-        ├── components/
-        ├── pages/
-        └── services/
+├── app/
+│   ├── admin/          # Admin dashboard pages
+│   ├── company/        # Company dashboard pages
+│   ├── student/        # Student dashboard pages
+│   ├── jobs/           # Public job listings
+│   ├── messages/       # Messaging system
+│   └── notifications/  # Notifications page
+├── components/         # Shared UI components
+├── contexts/           # React context (Auth, Theme)
+├── hooks/              # Custom React hooks
+└── lib/                # Supabase client & utilities
 ```
 
 ---
